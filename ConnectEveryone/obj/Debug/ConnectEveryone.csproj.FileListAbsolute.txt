@@ -1,0 +1,11 @@
+D:\GIT\ConnectEveryone\ConnectEveryone\bin\Debug\ConnectEveryone.exe.config
+D:\GIT\ConnectEveryone\ConnectEveryone\bin\Debug\ConnectEveryone.exe
+D:\GIT\ConnectEveryone\ConnectEveryone\bin\Debug\ConnectEveryone.pdb
+D:\GIT\ConnectEveryone\ConnectEveryone\obj\Debug\ConnectEveryone.csprojResolveAssemblyReference.cache
+D:\GIT\ConnectEveryone\ConnectEveryone\obj\Debug\ConnectEveryone.frmLogin.resources
+D:\GIT\ConnectEveryone\ConnectEveryone\obj\Debug\ConnectEveryone.Properties.Resources.resources
+D:\GIT\ConnectEveryone\ConnectEveryone\obj\Debug\ConnectEveryone.csproj.GenerateResource.Cache
+D:\GIT\ConnectEveryone\ConnectEveryone\obj\Debug\ConnectEveryone.exe
+D:\GIT\ConnectEveryone\ConnectEveryone\obj\Debug\ConnectEveryone.pdb
+D:\GIT\ConnectEveryone\ConnectEveryone\obj\Debug\ConnectEveryone.frmMain.resources
+D:\GIT\ConnectEveryone\ConnectEveryone\obj\Debug\ConnectEveryone.frmMyShare.resources

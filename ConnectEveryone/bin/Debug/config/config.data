@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserConfig>
+  <Info>
+    <UserNickName>MTMy</UserNickName>
+  </Info>
+  <ImpInfo>
+    <UserIP>192.168.1.1</UserIP>
+    <Host>http://yanaahuo.16mb.com/ConnectEveryone/IpList.php</Host>
+  </ImpInfo>
+</UserConfig>
