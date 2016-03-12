@@ -33,6 +33,7 @@ namespace ConnectEveryone
             ClassStaticData.PathConfigDir = "./config/";
             ClassStaticData.PathConfigXml = ClassStaticData.PathConfigDir + "config.data";
             ClassStaticData.PathHisListDir = "./Host/";
+            //ClassStaticData.HostUrl = "http://localhost/IpList.php";
             ClassStaticData.HostUrl = "http://yanaahuo.16mb.com/ConnectEveryone/IpList.php";
             ClassStaticData.UserShareConfig = ClassStaticData.PathConfigDir + "Share.data";
             //初始化版本信息
@@ -199,11 +200,7 @@ namespace ConnectEveryone
                     catch { }
                 }
 
-                //向全网通知更改
-                foreach (var item in ClassStaticData.OnlineHost)
-                {
-                    ClassShare.SendShareList(item.Key);
-                }
+               
             }
             catch
             {
@@ -221,6 +218,7 @@ namespace ConnectEveryone
                 try
                 {
                     File.Create(ClassStaticData.UserShareConfig);
+                    this.Dispose();
                 }
                 catch(Exception ErrMess)
                 {
@@ -241,14 +239,23 @@ namespace ConnectEveryone
             {
                 if (Directory.Exists(Convert.ToString(item)))
                 {
-                    ClassShare.GetAll(Convert.ToString(item),"mine");
+                    ClassShare.GetAll(Convert.ToString(item));
                 }
                 if (File.Exists(Convert.ToString(item)))
                 {
-                    ClassStaticData.AllFileList.Add(item);
+                    ClassStaticData.MyFileList.Add(item);
                 }
                
             }
+
+            //向全网通知更改
+            foreach (var item in ClassStaticData.OnlineHost)
+            {
+                ClassShare.SendShareList(item.Key);
+                
+            }
+
+            
 
             #endregion
             //显示主窗体

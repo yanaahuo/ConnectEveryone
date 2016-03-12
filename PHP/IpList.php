@@ -13,19 +13,22 @@ if($_GET['action']=='GetIPList' && isPrivateIp($_GET['IP']))
 	//计算30分钟前时间
 	$Lasttime = time()- 60*30;
 	//删除自己
-	$sql = "DELETE FROM `userlist` WHERE `IPPrivate` = '" . $_GET['IP'] . "'";
+	$sql = "DELETE FROM `UserList` WHERE `IPPrivate` = '" . $_GET['IP'] . "'";
 	mysql_db_query($mysql_database,$sql);
 	//插入新的自己
-	$sql = "INSERT INTO `userlist` (`id`, `IPaddress`, `IPprivate`, `LastTime`) VALUES (NULL, '".$user_IP."', '".$_GET['IP']."', '$Nowtime');";
+	$sql = "INSERT INTO `UserList` (`id`, `IPaddress`, `IPprivate`, `datetime`) VALUES (NULL, '".$user_IP."', '".$_GET['IP']."', '$Nowtime');";
 	mysql_db_query($mysql_database,$sql);
 	//列表在线用户
-	$sql = "SELECT * FROM `userlist` WHERE `IPaddress` = '$user_IP' && `LastTime` > $Lasttime";
+	$sql = "SELECT * FROM `UserList` WHERE `IPaddress` = '$user_IP' && `datetime` > $Lasttime";
 	$result = mysql_db_query($mysql_database,$sql);
     // 获取查询结果
 	
     while($row = mysql_fetch_array($result))
 	{
-			echo $row['IPprivate']."|";
+		if($row[2]!=$_GET['IP'])
+		{
+			echo $row[2]."|";
+		}
 	}
 }
 

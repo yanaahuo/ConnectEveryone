@@ -21,23 +21,25 @@ namespace ConnectEveryone
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            #region 初始化
+
             //启动监听端口
             Thread thListen = new Thread(Listen55233);
             thListen.Start();
-            #endregion
+            //允许其他线程访问
+            CheckForIllegalCrossThreadCalls = false;
         }
 
         //监听端口55233
-        private static void Listen55233()
+        private void Listen55233()
         {
             ClassUdp ClassUdpContral = new ClassUdp();
-            ClassUdpContral.ServerListen(55233);
+            ClassUdpContral.ServerListen(55233, this);
         }
 
-        bool IfRequest=true;
+        bool IfRequest = true;
         private void tmAskNickName_Tick(object sender, EventArgs e)
         {
+            tmAskNickName.Interval = 10000;
             //判断是否启动查询
             if (IfRequest)
             {
@@ -84,30 +86,28 @@ namespace ConnectEveryone
         {
             #region 读取IP列表
             string[] IPArr = ClassString.SplitStr(ClassWeb.GetHtml(ClassStaticData.HostUrl + "?action=GetIPList&IP=" + ClassStaticData.UserIP));
+            //清理在线列表
+            ClassStaticData.OnlineHost.Clear();
+            //清理全局文件列表
+            ClassStaticData.AllFileList.Clear();
             foreach (var item in IPArr)
             {
                 try
                 {
                     if (ClassIP.IsIP(item))
+                    {
                         ClassStaticData.OnlineHost.Add(item, "");
+                        ClassShare.SendShareList(item);
+                        IfRequest = true;
+                        tmAskNickName.Start();
+                    }
+
                 }
                 catch { }
             }
             #endregion
 
-            #region 刷新listbox
-            string[] TmpStr = { "" };
-            foreach (var item in ClassStaticData.AllFileList)
-            {
-                TmpStr =  ClassString.SplitStr(Convert.ToString(item));
-                //添加内容
-                for (int i = 1; i < TmpStr.Length; i++)
-                {
-                    libAllFile.Items.Add(new ListItem(TmpStr[i], TmpStr[0]));
-                }
-               
-            }
-            #endregion
+           
         }
 
         private void tsmMyShare_Click(object sender, EventArgs e)
@@ -119,8 +119,8 @@ namespace ConnectEveryone
 
         private void tsmFreshList_Click(object sender, EventArgs e)
         {
-           
-            
+
+
         }
 
         private void frmMain_ResizeBegin(object sender, EventArgs e)
@@ -131,7 +131,58 @@ namespace ConnectEveryone
 
         private void tmOnce_Tick(object sender, EventArgs e)
         {
-           
+
+        }
+
+        private void tmFreshLb_Tick(object sender, EventArgs e)
+        {
+            //请求全网文件
+            //直接放在LOAD里导致监听线程未启动
+            ClassUdp ClassUdpContral = new ClassUdp();
+            foreach (var item in ClassStaticData.OnlineHost)
+            {
+                ClassUdpContral.ClientSend(item.Key, 55233, "ConnectEveryoneAskShareList");
+            }
+            tmOnce.Enabled = false;
+        }
+
+        private void libAllFile_DoubleClick(object sender, EventArgs e)
+        {
+            MessageBox.Show(((ListItem)libAllFile.SelectedItem).Text);
+            MessageBox.Show(((ListItem)libAllFile.SelectedItem).Value.ToString());
+        }
+
+        private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //杀死自己
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+        }
+
+        private void tsmRefhreshFile_Click(object sender, EventArgs e)
+        {
+            tsmRefhreshFile.Enabled = false;
+            #region 读取IP列表
+            string[] IPArr = ClassString.SplitStr(ClassWeb.GetHtml(ClassStaticData.HostUrl + "?action=GetIPList&IP=" + ClassStaticData.UserIP));
+            //清理在线列表
+            ClassStaticData.OnlineHost.Clear();
+            //清理全局文件列表
+            ClassStaticData.AllFileList.Clear();
+            ClassUdp ClassUdpContral = new ClassUdp();
+            foreach (var item in IPArr)
+            {
+                try
+                {
+                    if (ClassIP.IsIP(item))
+                    {
+                        ClassStaticData.OnlineHost.Add(item, "");
+                        ClassUdpContral.ClientSend(item, 55233, "ConnectEveryoneAskShareList");
+                    }
+
+                }
+                catch { }
+            }
+            #endregion
+            tsmRefhreshFile.Enabled = true;
         }
     }
 }

@@ -145,7 +145,7 @@ namespace ConnectEveryone
             {
                 if (Directory.Exists(Convert.ToString(item)))
                 {
-                    ClassShare.GetAll(Convert.ToString(item),"mine");
+                    ClassShare.GetAll(Convert.ToString(item));
                 }
                 if (File.Exists(Convert.ToString(item)))
                 {

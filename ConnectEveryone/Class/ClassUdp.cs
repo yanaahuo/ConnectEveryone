@@ -9,6 +9,7 @@ using System.Collections;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Web.UI.WebControls;
 
 namespace ConnectEveryone
 {
@@ -18,7 +19,7 @@ namespace ConnectEveryone
         /// 服务器端
         /// </summary>
         /// <param name="port">待监听端口</param>
-        public void ServerListen(int port)
+        public void ServerListen(int port,frmMain frmMainContral)
         {
             UdpClient udpclient = new UdpClient(port);
             while (true)
@@ -51,6 +52,13 @@ namespace ConnectEveryone
                                 //添加到在线列表
                                 try
                                 {
+                                    try
+                                    {
+                                        str =  DecodeEncode.Base642String(str);
+                                    }
+                                    catch
+                                    {
+                                    }
                                     ClassStaticData.OnlineHost[Convert.ToString(ipendpoint.Address)] = str;
                                 }
                                 catch { }
@@ -58,13 +66,41 @@ namespace ConnectEveryone
                             }
 
                         }
+                        //接受分享列表请求
+                        if (data == "ConnectEveryoneAskShareList")
+                        {
+                            ClassShare.SendShareList(Convert.ToString(ipendpoint.Address));
+                        }
 
                         //分享列表识别系统
                         if (Regex.IsMatch(data, "ConnectEveryoneShareList"))
                         {
                             string str = Regex.Replace(data, "ConnectEveryoneShareList", "");
-                            str = Convert.ToString(ipendpoint.Address) + "|" + str;
-                            ClassStaticData.AllFileList.Add(str);
+                            //str = Convert.ToString(ipendpoint.Address) + "|" + str;
+                            try
+                            {
+                                //删除原分享目录
+                                ClassStaticData.AllFileList.Remove(Convert.ToString(ipendpoint.Address));
+                            }
+                            catch { }
+                            ClassStaticData.AllFileList.Add(Convert.ToString(ipendpoint.Address),str);
+                            
+                            #region 刷新listbox
+                            //清空listbox内容
+                            frmMainContral.libAllFile.Items.Clear();
+                            string[] TmpStr = { "" };
+                            string FileName;
+                            foreach (string key in ClassStaticData.AllFileList.Keys)
+                            {
+                                TmpStr = ClassString.SplitStr(Convert.ToString(ClassStaticData.AllFileList[key]));
+                                for (int i = 0; i < TmpStr.Length; i++)
+                                {
+                                    //获取文件名
+                                    FileName = Path.GetFileName(TmpStr[i]);
+                                    frmMainContral.libAllFile.Items.Add(new ListItem("【"+ClassStaticData.OnlineHost[key] +"】"+FileName, key + "|" + TmpStr[i]));
+                                }
+                            }
+                            #endregion
                         }
 
                     }

@@ -32,9 +32,10 @@ namespace ConnectEveryone
         //分享文件配置文件地址
         private static string _userShareConfig;
         //全网文件列表
-        private static ArrayList _allFileList = new ArrayList();
+        private static Hashtable _allFileList = new Hashtable();
         //我的文件列表
         private static ArrayList _myFileList = new ArrayList();
+
 
         public static string PathConfigDir
         {
@@ -179,18 +180,6 @@ namespace ConnectEveryone
             }
         }
 
-        public static ArrayList AllFileList
-        {
-            get
-            {
-                return _allFileList;
-            }
-
-            set
-            {
-                _allFileList = value;
-            }
-        }
 
         public static ArrayList MyFileList
         {
@@ -202,6 +191,21 @@ namespace ConnectEveryone
             set
             {
                 _myFileList = value;
+            }
+        }
+
+
+
+        public static Hashtable AllFileList
+        {
+            get
+            {
+                return _allFileList;
+            }
+
+            set
+            {
+                _allFileList = value;
             }
         }
     }

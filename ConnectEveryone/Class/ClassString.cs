@@ -19,6 +19,8 @@ namespace ConnectEveryone
             try
             {
                 s = str.Split(new char[] { '|' });
+                //删除空值
+                s = s.ToList().Where(x => !x.ToString().Equals("")).ToArray();
             }
             catch
             {

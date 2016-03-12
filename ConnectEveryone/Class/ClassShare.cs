@@ -34,25 +34,18 @@ namespace ConnectEveryone
         /// 遍历分享文件
         /// </summary>
         /// <param name="dir"></param>
-        public static void GetAll(string dir,string Who)//搜索文件夹中的文件
+        public static void GetAll(string dir)//搜索文件夹中的文件
         {
             String[] files = Directory.GetFiles(dir, "*", SearchOption.AllDirectories);
             foreach (var item in files)
             {
                 //判断是否重复
-                if (Who == "mine")
-                {
+
                     if (!ClassStaticData.MyFileList.Contains(item))
                     {
                         ClassStaticData.MyFileList.Add(item);
                     }
-                }else if(Who == "all")
-                {
-                    if (!ClassStaticData.AllFileList.Contains(item))
-                    {
-                        ClassStaticData.AllFileList.Add(item);
-                    }
-                }
+                
             }
         }
         /// <summary>
